@@ -613,6 +613,33 @@ VN.Examples = (function () {
      ================================================================ */
   var examples = [example1, example2, example3];
 
+  function flattenSteps(steps) {
+    var flat = [];
+    var flatIdx = 0;
+    steps.forEach(function (step) {
+      if (!step.animations || step.animations.length <= 1) {
+        var s = Object.assign({}, step);
+        s.stepIndex = flatIdx++;
+        flat.push(s);
+      } else {
+        step.animations.forEach(function (anim, i) {
+          var s = Object.assign({}, step);
+          s.stepIndex = flatIdx++;
+          s.animations = [anim];
+          if (step.animations.length > 1) {
+            s.detail = 'Micro-paso ' + (i + 1) + '/' + step.animations.length + ' — ' + anim.label + '. ' + step.detail;
+          }
+          flat.push(s);
+        });
+      }
+    });
+    return flat;
+  }
+
+  examples.forEach(function(ex) {
+    ex.steps = flattenSteps(ex.steps);
+  });
+
   return {
     getAll: function () { return examples; },
     get: function (index) { return examples[index]; },

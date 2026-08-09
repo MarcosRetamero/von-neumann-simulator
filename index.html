@@ -58,61 +58,84 @@
     <!-- ---------- Two-column layout: diagram + state panel ---------- -->
     <div id="content-area">
 
-      <!-- ===== LEFT: Diagram ===== -->
+      <!-- ===== MAIN DIAGRAM ===== -->
       <section id="diagram-section" aria-label="Diagrama de arquitectura">
+        
+        <!-- Large Cycle Indicator -->
+        <div id="cycle-indicator" class="cycle-indicator large-banner">
+          <div class="cycle-step" data-cycle="FETCH">
+            <span class="cycle-num">1</span>
+            <span class="cycle-name">FETCH</span>
+            <span class="cycle-desc">Buscar</span>
+          </div>
+          <div class="cycle-arrow">→</div>
+          <div class="cycle-step" data-cycle="DECODE">
+            <span class="cycle-num">2</span>
+            <span class="cycle-name">DECODE</span>
+            <span class="cycle-desc">Decodificar</span>
+          </div>
+          <div class="cycle-arrow">→</div>
+          <div class="cycle-step" data-cycle="EXECUTE">
+            <span class="cycle-num">3</span>
+            <span class="cycle-name">EXECUTE</span>
+            <span class="cycle-desc">Ejecutar</span>
+          </div>
+          <div class="cycle-arrow">→</div>
+          <div class="cycle-step" data-cycle="STORE">
+            <span class="cycle-num">4</span>
+            <span class="cycle-name">STORE</span>
+            <span class="cycle-desc">Almacenar</span>
+          </div>
+        </div>
+
         <div id="diagram-wrapper">
           <div id="diagram-container">
 
             <!-- SVG: bus lines (z-index: 1, behind components) -->
             <svg id="bus-lines-svg" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
               <!-- Bus labels -->
-              <text x="55" y="288" class="bus-label bus-label-data">Bus de Datos</text>
-              <text x="55" y="312" class="bus-label bus-label-addr">Bus de Direcciones</text>
-              <text x="55" y="336" class="bus-label bus-label-ctrl">Bus de Control</text>
+              <text x="55" y="282" class="bus-label bus-label-data">Bus de Datos</text>
+              <text x="735" y="282" class="bus-label bus-label-data">Bus de Datos (Salida)</text>
+              
+              <!-- Horizontal bus lines (Input to System, System to Output) -->
+              <line x1="175" y1="290" x2="240" y2="290" class="bus-line bus-line-data" id="busline-data-in"/>
+              <line x1="660" y1="290" x2="725" y2="290" class="bus-line bus-line-data" id="busline-data-out"/>
+              
+              <!-- Horizontal internal buses (System center) -->
+              <line x1="240" y1="290" x2="660" y2="290" class="bus-line bus-line-data" id="busline-data"/>
+              <line x1="240" y1="300" x2="660" y2="300" class="bus-line bus-line-addr" id="busline-addr"/>
+              <line x1="240" y1="310" x2="660" y2="310" class="bus-line bus-line-ctrl" id="busline-ctrl"/>
 
-              <!-- Horizontal bus lines -->
-              <line x1="50" y1="293" x2="820" y2="293" class="bus-line bus-line-data" id="busline-data"/>
-              <line x1="50" y1="317" x2="820" y2="317" class="bus-line bus-line-addr" id="busline-addr"/>
-              <line x1="50" y1="341" x2="820" y2="341" class="bus-line bus-line-ctrl" id="busline-ctrl"/>
-
-              <!-- Vertical connectors: Input to bus -->
-              <line x1="98" y1="140" x2="98" y2="293" class="connector connector-input"/>
-              <!-- Vertical connectors: Output from bus -->
-              <line x1="98" y1="341" x2="98" y2="478" class="connector connector-output"/>
-              <!-- Vertical connectors: Memory to bus -->
-              <line x1="755" y1="265" x2="755" y2="293" class="connector connector-memory"/>
-              <!-- Vertical connectors: CPU to bus -->
-              <line x1="467" y1="341" x2="467" y2="375" class="connector connector-cpu"/>
-
-              <!-- Small connector dots -->
-              <circle cx="98" cy="293" r="5" class="conn-dot conn-dot-data"/>
-              <circle cx="98" cy="341" r="5" class="conn-dot conn-dot-ctrl"/>
-              <circle cx="755" cy="293" r="5" class="conn-dot conn-dot-data"/>
-              <circle cx="467" cy="341" r="5" class="conn-dot conn-dot-ctrl"/>
-              <circle cx="467" cy="317" r="5" class="conn-dot conn-dot-addr"/>
-              <circle cx="467" cy="293" r="5" class="conn-dot conn-dot-data"/>
-              <circle cx="755" cy="317" r="5" class="conn-dot conn-dot-addr"/>
-              <circle cx="755" cy="341" r="5" class="conn-dot conn-dot-ctrl"/>
+              <!-- Vertical connectors (CPU to Buses) -->
+              <line x1="320" y1="280" x2="320" y2="290" class="connector connector-cpu"/>
+              <line x1="450" y1="280" x2="450" y2="300" class="connector connector-cpu"/>
+              <line x1="580" y1="280" x2="580" y2="310" class="connector connector-cpu"/>
+              
+              <!-- Vertical connectors (Memory to Buses) -->
+              <line x1="320" y1="320" x2="320" y2="290" class="connector connector-memory"/>
+              <line x1="450" y1="320" x2="450" y2="300" class="connector connector-memory"/>
+              <line x1="580" y1="320" x2="580" y2="310" class="connector connector-memory"/>
             </svg>
 
             <!-- SVG: animation paths (invisible, used for getPointAtLength) -->
             <svg id="bus-paths-svg" viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg">
               <!-- Data bus paths -->
-              <path id="path-data-input-memory"      d="M 175,85 L 220,85 L 220,293 L 755,293 L 755,265" class="anim-path"/>
-              <path id="path-data-memory-output"     d="M 755,265 L 755,293 L 98,293 L 98,478" class="anim-path"/>
-              <path id="path-data-memory-cpu"        d="M 755,265 L 755,293 L 467,293 L 467,375" class="anim-path"/>
-              <path id="path-data-memory-registers"  d="M 755,265 L 755,293 L 600,293 L 600,375" class="anim-path"/>
-              <path id="path-data-cpu-memory"        d="M 467,375 L 467,293 L 755,293 L 755,265" class="anim-path"/>
+              <path id="path-data-input-memory"      d="M 175,290 L 320,290 L 320,320" class="anim-path"/>
+              <path id="path-data-memory-output"     d="M 320,320 L 320,290 L 725,290" class="anim-path"/>
+              <path id="path-data-memory-cpu"        d="M 320,320 L 320,290 L 320,280" class="anim-path"/>
+              <path id="path-data-memory-registers"  d="M 320,320 L 320,290 L 580,290 L 580,280" class="anim-path"/>
+              <path id="path-data-cpu-memory"        d="M 320,280 L 320,290 L 320,320" class="anim-path"/>
+              <path id="path-data-registers-memory"  d="M 580,280 L 580,290 L 320,290 L 320,320" class="anim-path"/>
 
               <!-- Address bus paths -->
-              <path id="path-address-cpu-memory"     d="M 340,395 L 340,375 L 467,375 L 467,317 L 755,317 L 755,265" class="anim-path"/>
+              <path id="path-address-cpu-memory"     d="M 450,280 L 450,300 L 450,320" class="anim-path"/>
 
               <!-- Control bus paths -->
-              <path id="path-control-cpu-memory"     d="M 340,395 L 340,375 L 467,375 L 467,341 L 755,341 L 755,265" class="anim-path"/>
+              <path id="path-control-cpu-memory"     d="M 580,280 L 580,310 L 580,320" class="anim-path"/>
 
               <!-- Internal CPU paths -->
-              <path id="path-internal-registers-alu"  d="M 558,438 L 535,438" class="anim-path"/>
-              <path id="path-internal-alu-registers"  d="M 535,438 L 558,438" class="anim-path"/>
+              <path id="path-internal-registers-alu"  d="M 430,170 L 410,170" class="anim-path"/>
+              <path id="path-internal-alu-registers"  d="M 410,170 L 430,170" class="anim-path"/>
             </svg>
 
             <!-- SVG: animated packets layer (z-index: 20, in front) -->
@@ -157,8 +180,13 @@
               </div>
             </div>
 
+            <!-- System (Computer) -->
+            <div id="comp-system" class="component-system">
+              <!-- Background layer for visual border -->
+            </div>
+
             <!-- Memory -->
-            <div id="comp-memory" class="component comp-memory" data-tooltip="Memoria Principal (RAM) — Almacena temporalmente los programas y datos que la computadora está usando.">
+            <div id="comp-memory" class="component comp-memory component-interactive" data-info="comp-memory" data-tooltip="Haz clic para ver más info">
               <div class="comp-header">
                 <span class="comp-icon">💾</span>
                 <span class="comp-title">MEMORIA PRINCIPAL</span>
@@ -172,14 +200,14 @@
             </div>
 
             <!-- CPU container -->
-            <div id="comp-cpu" class="component comp-cpu" data-tooltip="Unidad Central de Procesamiento (CPU) — El cerebro de la computadora. Contiene la UC, la ALU y los Registros.">
+            <div id="comp-cpu" class="component comp-cpu component-interactive" data-info="comp-cpu" data-tooltip="Haz clic para ver más info">
               <div class="comp-header cpu-header">
                 <span class="comp-icon">⚙️</span>
                 <span class="comp-title">PROCESADOR (CPU)</span>
               </div>
 
               <!-- UC -->
-              <div id="comp-uc" class="sub-component sub-uc" data-tooltip="Unidad de Control — Coordina qué componente debe actuar y cuándo. No realiza cálculos: solo da órdenes.">
+              <div id="comp-uc" class="sub-component sub-uc component-interactive" data-info="comp-uc" data-tooltip="Haz clic para ver más info">
                 <div class="sub-header">
                   <span class="sub-icon">🎯</span>
                   <span class="sub-title">UC</span>
@@ -191,7 +219,7 @@
               </div>
 
               <!-- ALU -->
-              <div id="comp-alu" class="sub-component sub-alu" data-tooltip="Unidad Aritmético-Lógica — Realiza operaciones matemáticas (suma, resta, multiplicación) y lógicas (comparaciones).">
+              <div id="comp-alu" class="sub-component sub-alu component-interactive" data-info="comp-alu" data-tooltip="Haz clic para ver más info">
                 <div class="sub-header">
                   <span class="sub-icon">➕</span>
                   <span class="sub-title">ALU</span>
@@ -202,7 +230,7 @@
               </div>
 
               <!-- Registers -->
-              <div id="comp-registers" class="sub-component sub-registers" data-tooltip="Registros — Pequeños espacios de almacenamiento ultrarrápidos dentro del procesador. Guardan datos temporalmente durante las operaciones.">
+              <div id="comp-registers" class="sub-component sub-registers component-interactive" data-info="comp-registers" data-tooltip="Haz clic para ver más info">
                 <div class="sub-header">
                   <span class="sub-icon">📋</span>
                   <span class="sub-title">REGISTROS</span>
@@ -230,68 +258,6 @@
         </div>
       </section>
 
-      <!-- ===== RIGHT: State panel (visible on wide screens) ===== -->
-      <aside id="state-panel" aria-label="Estado del sistema">
-        <h2 class="panel-title">📊 Estado del Sistema</h2>
-
-        <!-- Cycle indicator -->
-        <div id="cycle-indicator" class="cycle-indicator">
-          <div class="cycle-step" data-cycle="FETCH">
-            <span class="cycle-num">1</span>
-            <span class="cycle-name">FETCH</span>
-            <span class="cycle-desc">Buscar</span>
-          </div>
-          <div class="cycle-arrow">→</div>
-          <div class="cycle-step" data-cycle="DECODE">
-            <span class="cycle-num">2</span>
-            <span class="cycle-name">DECODE</span>
-            <span class="cycle-desc">Decodificar</span>
-          </div>
-          <div class="cycle-arrow">→</div>
-          <div class="cycle-step" data-cycle="EXECUTE">
-            <span class="cycle-num">3</span>
-            <span class="cycle-name">EXECUTE</span>
-            <span class="cycle-desc">Ejecutar</span>
-          </div>
-          <div class="cycle-arrow">→</div>
-          <div class="cycle-step" data-cycle="STORE">
-            <span class="cycle-num">4</span>
-            <span class="cycle-name">STORE</span>
-            <span class="cycle-desc">Almacenar</span>
-          </div>
-        </div>
-
-        <!-- Memory state -->
-        <div class="state-card" id="state-memory-card">
-          <h3 class="state-title"><span>💾</span> Memoria</h3>
-          <table class="state-table" id="state-memory-table">
-            <thead><tr><th>Dirección</th><th>Contenido</th></tr></thead>
-            <tbody id="state-memory-tbody"></tbody>
-          </table>
-        </div>
-
-        <!-- Registers state -->
-        <div class="state-card" id="state-registers-card">
-          <h3 class="state-title"><span>📋</span> Registros</h3>
-          <div class="state-registers">
-            <div class="sreg-row"><span class="sreg-label">PC</span><span id="state-pc" class="sreg-val">—</span></div>
-            <div class="sreg-row"><span class="sreg-label">IR</span><span id="state-ir" class="sreg-val">—</span></div>
-            <hr class="sreg-divider">
-            <div class="sreg-row"><span class="sreg-label">R1</span><span id="state-r1" class="sreg-val">—</span></div>
-            <div class="sreg-row"><span class="sreg-label">R2</span><span id="state-r2" class="sreg-val">—</span></div>
-            <div class="sreg-row"><span class="sreg-label">R3</span><span id="state-r3" class="sreg-val">—</span></div>
-          </div>
-        </div>
-
-        <!-- ALU state -->
-        <div class="state-card" id="state-alu-card">
-          <h3 class="state-title"><span>➕</span> ALU</h3>
-          <div id="state-alu-display" class="state-alu">
-            <span class="alu-idle-state">Inactiva</span>
-          </div>
-        </div>
-      </aside>
-
     </div><!-- /content-area -->
 
     <!-- ---------- Controls bar ---------- -->
@@ -315,24 +281,25 @@
       </div>
     </section>
 
-    <!-- ---------- Step description ---------- -->
-    <section id="step-description" aria-label="Descripción del paso actual">
-      <div id="step-desc-main" class="step-desc-main">
+    <!-- ---------- Large Theory Panel ---------- -->
+    <section id="step-description" class="theory-panel" aria-label="Descripción detallada del paso">
+      <div id="step-desc-main" class="theory-main">
         Seleccioná un ejemplo y presioná <strong>"Siguiente"</strong> o <strong>"Ejecutar"</strong> para comenzar la simulación.
       </div>
-      <div id="step-desc-detail" class="step-desc-detail"></div>
+      <div id="step-desc-detail" class="theory-detail"></div>
     </section>
 
   </main>
 
   <!-- ============================================================
-       THEORY MODAL
+       THEORY MODAL & COMPONENT MODAL
        ============================================================ -->
-  <div id="theory-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="theory-title">
+  <div id="component-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="comp-title">
     <div class="modal-content">
-      <button id="btn-close-theory" class="modal-close" aria-label="Cerrar">&times;</button>
-      <div id="theory-body" class="theory-body">
-        <!-- Content injected by theory.js -->
+      <button id="btn-close-modal" class="modal-close" aria-label="Cerrar">&times;</button>
+      <div class="modal-body">
+        <h2 id="modal-comp-title" class="modal-title">Título</h2>
+        <p id="modal-comp-desc" class="modal-desc">Descripción del componente.</p>
       </div>
     </div>
   </div>
@@ -348,6 +315,7 @@
   <script src="js/examples.js"></script>
   <script src="js/simulation.js"></script>
   <script src="js/diagram.js"></script>
+  <script src="js/texts.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/ui.js"></script>
   <script src="js/theory.js"></script>

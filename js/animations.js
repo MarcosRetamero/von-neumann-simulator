@@ -55,45 +55,25 @@ VN.Animations = (function () {
     return path;
   }
 
-  /* ---- Create a visual data packet ---- */
+  /* ---- Create a visual data packet (glowing dot) ---- */
   function createPacket(value, busType) {
     var color = BUS_COLORS[busType] || BUS_COLORS.data;
 
     var g = document.createElementNS(SVG_NS, 'g');
     g.setAttribute('class', 'data-packet');
 
-    /* Background pill */
-    var rect = document.createElementNS(SVG_NS, 'rect');
-    var textLen = String(value).length;
-    var w = Math.max(36, textLen * 9 + 16);
-    rect.setAttribute('x', -w / 2);
-    rect.setAttribute('y', -12);
-    rect.setAttribute('width', w);
-    rect.setAttribute('height', 24);
-    rect.setAttribute('rx', 12);
-    rect.setAttribute('fill', color);
-    rect.setAttribute('fill-opacity', '0.85');
-    rect.setAttribute('stroke', '#fff');
-    rect.setAttribute('stroke-width', '1.5');
-    rect.setAttribute('stroke-opacity', '0.5');
+    var circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('cx', 0);
+    circle.setAttribute('cy', 0);
+    circle.setAttribute('r', 6);
+    circle.setAttribute('fill', color);
+    
+    // SVG glow effect
+    if (busType === 'data') circle.setAttribute('filter', 'url(#glow-data)');
+    else if (busType === 'address') circle.setAttribute('filter', 'url(#glow-addr)');
+    else if (busType === 'control') circle.setAttribute('filter', 'url(#glow-ctrl)');
 
-    /* Text */
-    var text = document.createElementNS(SVG_NS, 'text');
-    text.setAttribute('text-anchor', 'middle');
-    text.setAttribute('dominant-baseline', 'central');
-    text.setAttribute('fill', '#000');
-    text.setAttribute('font-family', "'JetBrains Mono', monospace");
-    text.setAttribute('font-size', '11');
-    text.setAttribute('font-weight', '700');
-    text.textContent = value;
-
-    g.appendChild(rect);
-    g.appendChild(text);
-
-    /* Add glow filter based on bus type */
-    if (busType === 'data') g.setAttribute('filter', 'url(#glow-data)');
-    else if (busType === 'address') g.setAttribute('filter', 'url(#glow-addr)');
-    else if (busType === 'control') g.setAttribute('filter', 'url(#glow-ctrl)');
+    g.appendChild(circle);
 
     return g;
   }
@@ -125,12 +105,7 @@ VN.Animations = (function () {
 
         distance += spd * dt;
         if (distance >= totalLength) {
-          /* Small pause at destination */
-          setTimeout(function () {
-            removePacket(packet);
-            resolve();
-          }, 150);
-          return;
+          distance = 0; // loop back to start
         }
 
         var pt = path.getPointAtLength(distance);

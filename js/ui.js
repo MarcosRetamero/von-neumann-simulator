@@ -33,14 +33,11 @@ VN.UI = (function () {
     dom.regR3       = document.getElementById('reg-r3');
     dom.memTbody    = document.getElementById('memory-tbody');
 
-    /* State panel displays */
-    dom.statePc     = document.getElementById('state-pc');
-    dom.stateIr     = document.getElementById('state-ir');
-    dom.stateR1     = document.getElementById('state-r1');
-    dom.stateR2     = document.getElementById('state-r2');
-    dom.stateR3     = document.getElementById('state-r3');
-    dom.stateMemTbody = document.getElementById('state-memory-tbody');
-    dom.stateAlu    = document.getElementById('state-alu-display');
+    /* Modal refs */
+    dom.compModal = document.getElementById('component-modal');
+    dom.modalClose = document.getElementById('btn-close-modal');
+    dom.modalTitle = document.getElementById('modal-comp-title');
+    dom.modalDesc = document.getElementById('modal-comp-desc');
 
     /* Cycle indicator */
     dom.cycleSteps = document.querySelectorAll('.cycle-step');
@@ -87,6 +84,24 @@ VN.UI = (function () {
         VN.Simulation.setExample(idx);
       });
     });
+
+    /* Interactive components for Modal */
+    document.querySelectorAll('.component-interactive').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var infoId = el.getAttribute('data-info');
+        if (VN.Texts && VN.Texts[infoId]) {
+          dom.modalTitle.textContent = VN.Texts[infoId].title;
+          dom.modalDesc.textContent = VN.Texts[infoId].description;
+          dom.compModal.classList.remove('hidden');
+        }
+      });
+    });
+
+    if (dom.modalClose) {
+      dom.modalClose.addEventListener('click', function() {
+        dom.compModal.classList.add('hidden');
+      });
+    }
   }
 
   /* ---- Render a snapshot ---- */
@@ -132,15 +147,9 @@ VN.UI = (function () {
     updateRegisters(snap);
     updateMemory(snap, example);
 
-    /* Update state panel */
-    updateStatePanel(snap, example);
-
     /* Play animations only when going forward */
     if (direction === 'forward' && snap.animations && snap.animations.length > 0) {
-      VN.Simulation.setAnimating(true);
-      VN.Animations.playStep(snap.animations).then(function () {
-        VN.Simulation.setAnimating(false);
-      });
+      VN.Animations.playStep(snap.animations);
     }
   }
 
@@ -169,8 +178,6 @@ VN.UI = (function () {
 
     updateRegDisplay(dom.ucPc, pcVal);
     updateRegDisplay(dom.ucIr, irVal);
-    updateRegDisplay(dom.statePc, pcVal);
-    updateRegDisplay(dom.stateIr, irVal);
   }
 
   /* ---- ALU ---- */
@@ -178,16 +185,10 @@ VN.UI = (function () {
     var alu = snap.alu;
     if (!alu || !alu.op) {
       dom.aluDisplay.innerHTML = '<span class="alu-idle">Inactiva</span>';
-      dom.stateAlu.innerHTML = '<span class="alu-idle-state">Inactiva</span>';
     } else {
       dom.aluDisplay.innerHTML =
         '<span class="alu-operation">' + alu.a + ' ' + alu.op + ' ' + alu.b + '</span>' +
         '<br><span class="alu-result">= ' + alu.result + '</span>';
-
-      dom.stateAlu.innerHTML =
-        '<span class="alu-op-name">' + getOpName(alu.op) + '</span>' +
-        '<span class="alu-expression">' + alu.a + ' ' + alu.op + ' ' + alu.b + '</span>' +
-        '<span class="alu-answer">= ' + alu.result + '</span>';
     }
   }
 
@@ -202,9 +203,6 @@ VN.UI = (function () {
     updateRegDisplay(dom.regR1, r.R1);
     updateRegDisplay(dom.regR2, r.R2);
     updateRegDisplay(dom.regR3, r.R3);
-    updateRegDisplay(dom.stateR1, r.R1);
-    updateRegDisplay(dom.stateR2, r.R2);
-    updateRegDisplay(dom.stateR3, r.R3);
   }
 
   function updateRegDisplay(el, value) {
@@ -233,23 +231,6 @@ VN.UI = (function () {
     dom.memTbody.innerHTML = html;
   }
 
-  /* ---- State panel memory ---- */
-  function updateStatePanel(snap, example) {
-    var mem = snap.memory;
-    var html = '';
-    var addresses = Object.keys(mem).sort(function (a, b) { return Number(a) - Number(b); });
-
-    addresses.forEach(function (addr) {
-      var val = mem[addr];
-      var isActive = snap.pc !== null && Number(addr) === snap.pc;
-      html += '<tr class="' + (isActive ? 'highlighted' : '') + '">' +
-        '<td>' + addr + '</td>' +
-        '<td>' + (val !== null ? val : '—') + '</td>' +
-        '</tr>';
-    });
-
-    dom.stateMemTbody.innerHTML = html;
-  }
 
   /* ---- Play state UI ---- */
   function updatePlayState(playing) {
@@ -291,13 +272,7 @@ VN.UI = (function () {
     dom.regR2.textContent = '—';
     dom.regR3.textContent = '—';
     dom.memTbody.innerHTML = '';
-    dom.stateMemTbody.innerHTML = '';
-    dom.stateAlu.innerHTML = '<span class="alu-idle-state">Inactiva</span>';
-    dom.statePc.textContent = '—';
-    dom.stateIr.textContent = '—';
-    dom.stateR1.textContent = '—';
-    dom.stateR2.textContent = '—';
-    dom.stateR3.textContent = '—';
+    dom.memTbody.innerHTML = '';
   }
 
   return {
