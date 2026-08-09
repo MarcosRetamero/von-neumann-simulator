@@ -18,32 +18,39 @@
   --border-color:   #2d3a50;
   --border-active:  #475569;
 
-  /* --- Component colors --- */
-  --color-input:     #06b6d4;
-  --color-input-bg:  rgba(6, 182, 212, 0.10);
-  --color-output:    #db2777;
-  --color-output-bg: rgba(219, 39, 119, 0.10);
-  --color-memory:    #3b82f6;
+  /* --- Semantic Colors --- */
+  --color-violet: #8b5cf6; /* UI/Controls/CPU/UC */
+  --color-blue:   #3b82f6; /* Memory/Info/Input/Addr Bus */
+  --color-green:  #10b981; /* Active/Good/ALU/Registers */
+  --color-yellow: #eab308; /* Data Bus */
+  --color-red:    #ef4444; /* Output/Alert/Control Bus */
+
+  /* --- Component mappings --- */
+  --color-input:     var(--color-blue);
+  --color-input-bg:  rgba(59, 130, 246, 0.10);
+  --color-output:    var(--color-red);
+  --color-output-bg: rgba(239, 68, 68, 0.10);
+  --color-memory:    var(--color-blue);
   --color-memory-bg: rgba(59, 130, 246, 0.10);
-  --color-cpu:       #6366f1;
-  --color-cpu-bg:    rgba(99, 102, 241, 0.06);
-  --color-uc:        #8b5cf6;
+  --color-cpu:       var(--color-violet);
+  --color-cpu-bg:    rgba(139, 92, 246, 0.06);
+  --color-uc:        var(--color-violet);
   --color-uc-bg:     rgba(139, 92, 246, 0.12);
-  --color-alu:       #f97316;
-  --color-alu-bg:    rgba(249, 115, 22, 0.12);
-  --color-regs:      #10b981;
+  --color-alu:       var(--color-green);
+  --color-alu-bg:    rgba(16, 185, 129, 0.12);
+  --color-regs:      var(--color-green);
   --color-regs-bg:   rgba(16, 185, 129, 0.12);
 
   /* --- Bus colors --- */
-  --bus-data:    #eab308;
-  --bus-addr:    #22c55e;
-  --bus-ctrl:    #ef4444;
+  --bus-data:    var(--color-yellow);
+  --bus-addr:    var(--color-blue);
+  --bus-ctrl:    var(--color-red);
 
   /* --- Cycle colors --- */
-  --cycle-fetch:   #3b82f6;
-  --cycle-decode:  #8b5cf6;
-  --cycle-execute: #f97316;
-  --cycle-store:   #10b981;
+  --cycle-fetch:   var(--color-blue);
+  --cycle-decode:  var(--color-violet);
+  --cycle-execute: var(--color-green);
+  --cycle-store:   var(--color-blue);
 
   /* --- Glow intensities --- */
   --glow-sm: 0 0 10px;
@@ -143,12 +150,13 @@ table { border-collapse: collapse; }
    ============================================================ */
 #example-selector {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: var(--sp-md);
-  padding: var(--sp-md) var(--sp-lg);
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  flex-wrap: wrap;
+  padding: var(--sp-md);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
 }
 .selector-label {
   font-size: 0.85rem;
@@ -189,9 +197,10 @@ table { border-collapse: collapse; }
   display: none;
   align-items: flex-start;
   gap: var(--sp-sm);
-  padding: var(--sp-sm) var(--sp-lg);
+  padding: var(--sp-sm) var(--sp-md);
   background: rgba(234, 179, 8, 0.06);
-  border-bottom: 1px solid rgba(234, 179, 8, 0.15);
+  border: 1px solid rgba(234, 179, 8, 0.15);
+  border-radius: var(--radius-md);
   font-size: 0.8rem;
   color: rgba(234, 179, 8, 0.85);
   line-height: 1.5;
@@ -200,15 +209,15 @@ table { border-collapse: collapse; }
 .note-icon { flex-shrink: 0; font-size: 1rem; }
 
 /* ============================================================
-   CONTENT AREA (one-column layout with center diagram)
+   CONTENT AREA (Two-column layout: diagram + sidebar)
    ============================================================ */
 #content-area {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 380px 1fr;
   gap: var(--sp-md);
   flex: 1;
   overflow: hidden;
-  align-items: center;
+  padding: 0 var(--sp-md) var(--sp-md);
 }
 #diagram-section {
   flex: none;
@@ -216,7 +225,22 @@ table { border-collapse: collapse; }
   display: flex;
   flex-direction: column;
   align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   padding: var(--sp-md);
+  overflow: hidden;
+}
+
+/* ============================================================
+   ACTION PANEL (Sidebar)
+   ============================================================ */
+.action-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+  overflow-y: auto;
+  padding-right: 4px;
 }
 
 /* ============================================================
@@ -300,14 +324,16 @@ table { border-collapse: collapse; }
 .bus-line {
   stroke-width: 3;
   fill: none;
-  opacity: 0.4;
-  transition: opacity var(--transition-med);
+  opacity: 0.4; /* Default */
+  transition: opacity var(--transition-med), filter var(--transition-med);
 }
 .bus-line-data { stroke: var(--bus-data); }
 .bus-line-addr { stroke: var(--bus-addr); stroke-dasharray: 10 5; }
 .bus-line-ctrl { stroke: var(--bus-ctrl); stroke-dasharray: 3 4; }
+.bus-line-internal { stroke: var(--color-violet); stroke-dasharray: 2 2; }
 
-.bus-line.active { opacity: 1; filter: drop-shadow(var(--glow-sm) currentColor); }
+.bus-line.bus-inactive { opacity: 0.1; filter: grayscale(50%); }
+.bus-line.bus-active { opacity: 1; filter: drop-shadow(var(--glow-sm) currentColor); }
 
 /* Bus labels */
 .bus-label {
@@ -315,7 +341,10 @@ table { border-collapse: collapse; }
   font-size: 9px;
   font-weight: 500;
   fill-opacity: 0.5;
+  transition: fill-opacity var(--transition-med);
 }
+.bus-label.bus-inactive { fill-opacity: 0.1; }
+.bus-label.bus-active { fill-opacity: 1; font-weight: 700; }
 .bus-label-data { fill: var(--bus-data); }
 .bus-label-addr { fill: var(--bus-addr); }
 .bus-label-ctrl { fill: var(--bus-ctrl); }
@@ -482,6 +511,16 @@ table { border-collapse: collapse; }
   color: #fff;
   background: rgba(59, 130, 246, 0.15);
 }
+.memory-row-active td {
+  background: rgba(59, 130, 246, 0.25) !important;
+  outline: 1px solid var(--color-blue);
+}
+.mem-pointer {
+  color: var(--color-yellow);
+  font-size: 0.8rem;
+  display: inline-block;
+  margin-right: 4px;
+}
 .memory-table .mem-addr {
   color: var(--text-muted);
   font-weight: 500;
@@ -559,6 +598,12 @@ table { border-collapse: collapse; }
   box-shadow: var(--glow-md) rgba(249, 115, 22, 0.35), inset 0 0 15px rgba(249, 115, 22, 0.08);
   transform: scale(1.05);
 }
+.sub-alu.alu-computing {
+  transform: scale(1.2);
+  box-shadow: 0 0 30px rgba(16, 185, 129, 0.5); /* Green glow */
+  border-color: var(--color-green);
+  z-index: 100;
+}
 
 /* Registers */
 .sub-registers {
@@ -610,6 +655,15 @@ table { border-collapse: collapse; }
   justify-content: center;
 }
 .alu-idle { color: var(--text-muted); font-size: 0.65rem; }
+.alu-computing .alu-operation {
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+.alu-computing .alu-result {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--color-green);
+}
 .alu-operation {
   font-weight: 700;
   color: var(--color-alu);
@@ -636,69 +690,84 @@ table { border-collapse: collapse; }
 }
 
 /* ============================================================
-   STATE PANEL (sidebar)
+   THEORY PANEL (Now in sidebar)
    ============================================================ */
-#state-panel {
-  width: 280px;
-  min-width: 280px;
-  background: var(--bg-secondary);
-  border-left: 1px solid var(--border-color);
-  padding: var(--sp-md);
-  overflow-y: auto;
+.theory-panel {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--sp-lg);
   display: flex;
   flex-direction: column;
   gap: var(--sp-md);
+  flex: 1;
 }
-.panel-title {
-  font-size: 0.9rem;
-  font-weight: 700;
+.theory-main {
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.5;
   color: var(--text-primary);
-  padding-bottom: var(--sp-sm);
   border-bottom: 1px solid var(--border-color);
+  padding-bottom: var(--sp-sm);
 }
 
-/* Cycle indicator */
+/* State panel (sidebar) grid layout */
+.step-panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+  padding: var(--sp-md);
+  background: var(--bg-secondary);
+  border-left: 1px solid var(--border-color);
+  overflow-y: auto;
+}
+.step-indicator {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-violet);
+  background: var(--color-uc-bg);
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  display: inline-block;
+  align-self: flex-start;
+}
+
+/* Cycle indicator in header */
 .cycle-indicator {
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: var(--sp-sm);
-  background: var(--bg-card);
-  border-radius: var(--radius-md);
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--sp-xs);
+  background: rgba(15, 23, 42, 0.4);
+  padding: 6px 16px;
+  border-radius: var(--radius-xl);
   border: 1px solid var(--border-color);
 }
 .cycle-step {
-  flex: 1;
-  text-align: center;
-  padding: 6px 2px;
-  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
   transition: all var(--transition-med);
   cursor: default;
 }
 .cycle-num {
-  display: block;
-  font-size: 0.6rem;
+  font-size: 0.9rem;
   font-weight: 700;
-  color: var(--text-muted);
-  margin-bottom: 2px;
 }
 .cycle-name {
-  display: block;
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  color: var(--text-secondary);
-}
-.cycle-desc {
-  display: block;
-  font-size: 0.55rem;
-  color: var(--text-muted);
-  margin-top: 1px;
 }
 .cycle-arrow {
   color: var(--text-muted);
-  font-size: 0.7rem;
-  flex-shrink: 0;
+  font-size: 0.9rem;
+  opacity: 0.5;
 }
 
 /* Cycle active states */
@@ -811,32 +880,34 @@ table { border-collapse: collapse; }
 .alu-answer { color: var(--color-regs); font-weight: 800; font-size: 0.9rem; }
 
 /* ============================================================
-   CONTROLS BAR
+   CONTROLS BAR (Now in Sidebar)
    ============================================================ */
 #controls-bar {
-  padding: var(--sp-md) var(--sp-lg);
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
-}
-.controls-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--sp-sm);
-  flex-wrap: wrap;
-}
-.ctrl-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 16px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  color: var(--text-secondary);
-  font-size: 0.82rem;
-  font-weight: 600;
-  transition: all var(--transition-med);
+  padding: var(--sp-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-md);
+  align-items: stretch;
+}
+.controls-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-sm);
+  justify-content: center;
+}
+.ctrl-btn {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.85rem; font-weight: 600;
+  transition: all var(--transition-fast);
+  flex: 1 1 calc(50% - var(--sp-sm));
 }
 .ctrl-btn:hover:not(:disabled) {
   background: var(--bg-card-hover);
@@ -865,14 +936,6 @@ table { border-collapse: collapse; }
 }
 .ctrl-icon { font-size: 0.85rem; }
 .ctrl-text { font-size: 0.78rem; }
-
-.step-indicator {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  padding: 0 var(--sp-md);
-  white-space: nowrap;
-}
 
 /* ============================================================
    STEP DESCRIPTION
@@ -904,7 +967,7 @@ table { border-collapse: collapse; }
 }
 
 /* ============================================================
-   THEORY MODAL
+   MODALS
    ============================================================ */
 .modal-overlay {
   position: fixed;
@@ -923,18 +986,20 @@ table { border-collapse: collapse; }
   pointer-events: none;
 }
 .modal-content {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-xl);
-  max-width: 720px;
-  width: 100%;
-  max-height: 85vh;
-  overflow-y: auto;
+  background: var(--bg-card);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: var(--radius-lg);
   padding: var(--sp-xl);
+  width: 90%;
+  max-width: 500px;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-  transform: translateY(0);
-  transition: transform var(--transition-med);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  animation: modal-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+#theory-modal .modal-content {
+  max-width: 900px;
 }
 .modal-overlay.hidden .modal-content {
   transform: translateY(20px);
@@ -1175,7 +1240,19 @@ table { border-collapse: collapse; }
    ============================================================ */
 @media (max-width: 1100px) {
   #content-area {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    overflow-y: visible;
+  }
+  .action-panel {
+    overflow-y: visible;
+  }
+  #app-main {
+    overflow-y: visible;
+  }
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
   }
   #state-panel {
     width: 100%;
@@ -1185,7 +1262,7 @@ table { border-collapse: collapse; }
     flex-direction: row;
     flex-wrap: wrap;
     gap: var(--sp-sm);
-    max-height: 250px;
+    max-height: none;
   }
   .state-card { flex: 1; min-width: 200px; }
   .cycle-indicator { order: -1; width: 100%; }
@@ -1217,3 +1294,23 @@ table { border-collapse: collapse; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--border-active); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.app-footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+.app-footer a {
+  color: var(--color-cpu);
+  text-decoration: none;
+  font-weight: 600;
+}
+.app-footer a:hover {
+  text-decoration: underline;
+}

@@ -83,21 +83,52 @@ VN.Diagram = (function () {
 
   /* ---- Bus highlighting ---- */
   function highlightBuses(activeBusList) {
-    Object.keys(busLines).forEach(function (key) {
-      busLines[key].classList.remove('active');
+    var allBusLines = document.querySelectorAll('.bus-line');
+    var allBusLabels = document.querySelectorAll('.bus-label');
+    var allArrows = document.querySelectorAll('.internal-arrow');
+
+    /* By default, set everything to inactive */
+    allBusLines.forEach(function (el) {
+      el.classList.remove('bus-active');
+      el.classList.add('bus-inactive');
+    });
+    allBusLabels.forEach(function (el) {
+      el.classList.remove('bus-active');
+      el.classList.add('bus-inactive');
+    });
+    allArrows.forEach(function (a) {
+      a.classList.remove('active');
     });
 
-    /* Also clear internal arrows */
-    var arrows = document.querySelectorAll('.internal-arrow');
-    arrows.forEach(function (a) { a.classList.remove('active'); });
+    if (!activeBusList || activeBusList.length === 0) {
+      return; // All buses stay inactive
+    }
 
-    if (!activeBusList) return;
+    /* Activate specifically requested buses */
     activeBusList.forEach(function (busType) {
-      if (busType === 'data' && busLines.data) busLines.data.classList.add('active');
-      if (busType === 'address' && busLines.addr) busLines.addr.classList.add('active');
-      if (busType === 'control' && busLines.ctrl) busLines.ctrl.classList.add('active');
+      if (busType === 'data') {
+        document.querySelectorAll('.bus-line-data, .bus-label-data').forEach(function(el) {
+          el.classList.remove('bus-inactive');
+          el.classList.add('bus-active');
+        });
+      }
+      if (busType === 'address') {
+        document.querySelectorAll('.bus-line-addr, .bus-label-addr').forEach(function(el) {
+          el.classList.remove('bus-inactive');
+          el.classList.add('bus-active');
+        });
+      }
+      if (busType === 'control') {
+        document.querySelectorAll('.bus-line-ctrl, .bus-label-ctrl').forEach(function(el) {
+          el.classList.remove('bus-inactive');
+          el.classList.add('bus-active');
+        });
+      }
       if (busType === 'internal') {
-        arrows.forEach(function (a) { a.classList.add('active'); });
+        document.querySelectorAll('.bus-line-internal').forEach(function(el) {
+          el.classList.remove('bus-inactive');
+          el.classList.add('bus-active');
+        });
       }
     });
   }

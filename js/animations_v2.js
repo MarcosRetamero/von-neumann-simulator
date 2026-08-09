@@ -60,9 +60,9 @@ VN.Animations = (function () {
     var color = BUS_COLORS[busType] || BUS_COLORS.data;
 
     var g = document.createElementNS(SVG_NS, 'g');
-    g.setAttribute('class', 'data-packet');
 
     var circle = document.createElementNS(SVG_NS, 'circle');
+    circle.setAttribute('class', 'data-packet');
     circle.setAttribute('cx', 0);
     circle.setAttribute('cy', 0);
     circle.setAttribute('r', 6);
@@ -182,7 +182,8 @@ VN.Animations = (function () {
     var lineId = {
       data:    'busline-data',
       address: 'busline-addr',
-      control: 'busline-ctrl'
+      control: 'busline-ctrl',
+      internal: 'busline-internal'
     };
     var el = document.getElementById(lineId[busType]);
     if (el) {
@@ -229,7 +230,7 @@ VN.Animations = (function () {
     hideAnimLabel();
 
     /* Remove active from all bus lines */
-    ['busline-data', 'busline-addr', 'busline-ctrl'].forEach(function (id) {
+    ['busline-data', 'busline-addr', 'busline-ctrl', 'busline-internal'].forEach(function (id) {
       var el = document.getElementById(id);
       if (el) el.classList.remove('active');
     });

@@ -1,0 +1,8 @@
+# Mejoras Realizadas
+
+- (Completado) Implementación del layout en 2 columnas (Diagrama + Barra lateral) para evitar scroll vertical innecesario.
+- (Completado) Configuración del action-panel derecho (controles de ejecución y panel descriptivo del paso actual).
+- (Completado) Eliminación del efecto burbuja de eventos (event bubbling) en los clics de componentes interactivos (UC, ALU, Registros), arreglando el bug de apertura del modal general de CPU.
+- (Completado) Componentes de Entrada y Salida convertidos en elementos interactivos con modales propios.
+- (Completado) Refactorización de textos descriptivos. Todo el contenido hardcodeado en JS (incluyendo la teoría) fue centralizado en el archivo texts.js.
+- (Completado) Integración del nuevo documento de teoría mejorada y ampliación visual del modal de teoría para una lectura óptima.

@@ -87,7 +87,8 @@ VN.UI = (function () {
 
     /* Interactive components for Modal */
     document.querySelectorAll('.component-interactive').forEach(function(el) {
-      el.addEventListener('click', function() {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
         var infoId = el.getAttribute('data-info');
         if (VN.Texts && VN.Texts[infoId]) {
           dom.modalTitle.textContent = VN.Texts[infoId].title;
@@ -117,8 +118,9 @@ VN.UI = (function () {
     dom.btnPrev.disabled = snap.stepIndex <= 0;
     dom.btnNext.disabled = snap.stepIndex >= total - 1;
 
-    /* Update description */
-    dom.descMain.textContent = snap.description;
+    /* Update description (support simple markdown bold) */
+    var htmlDesc = snap.description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    dom.descMain.innerHTML = htmlDesc;
     dom.descMain.classList.remove('animate');
     void dom.descMain.offsetWidth; /* force reflow */
     dom.descMain.classList.add('animate');
@@ -183,12 +185,15 @@ VN.UI = (function () {
   /* ---- ALU ---- */
   function updateALU(snap) {
     var alu = snap.alu;
+    var aluComp = document.getElementById('comp-alu');
     if (!alu || !alu.op) {
       dom.aluDisplay.innerHTML = '<span class="alu-idle">Inactiva</span>';
+      if (aluComp) aluComp.classList.remove('alu-computing');
     } else {
       dom.aluDisplay.innerHTML =
         '<span class="alu-operation">' + alu.a + ' ' + alu.op + ' ' + alu.b + '</span>' +
-        '<br><span class="alu-result">= ' + alu.result + '</span>';
+        '<br><span class="alu-result">→ ' + alu.result + '</span>';
+      if (aluComp) aluComp.classList.add('alu-computing');
     }
   }
 
@@ -222,8 +227,10 @@ VN.UI = (function () {
     addresses.forEach(function (addr) {
       var val = mem[addr];
       var isActive = snap.pc !== null && Number(addr) === snap.pc;
-      html += '<tr class="' + (isActive ? 'mem-active' : '') + '">' +
-        '<td class="mem-addr">' + addr + '</td>' +
+      var pointer = isActive ? '<span class="mem-pointer">► </span>' : '';
+      
+      html += '<tr class="' + (isActive ? 'mem-active memory-row-active' : '') + '">' +
+        '<td class="mem-addr">' + pointer + addr + '</td>' +
         '<td class="mem-val">' + (val !== null ? val : '—') + '</td>' +
         '</tr>';
     });

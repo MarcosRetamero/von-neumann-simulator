@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/styles.css?v=3">
 </head>
 <body>
 
@@ -18,8 +18,28 @@
   <header id="app-header">
     <div class="header-left">
       <span class="header-icon">🖥️</span>
-      <h1>Simulador de Arquitectura <span class="highlight">Von Neumann</span></h1>
+      <h1>Simulador <span class="highlight">Von Neumann</span></h1>
     </div>
+
+    <!-- Cycle Indicator (Progress Bar) -->
+    <div id="cycle-indicator" class="cycle-indicator">
+      <div class="cycle-step" data-cycle="FETCH">
+        <span class="cycle-num">①</span> <span class="cycle-name">FETCH</span>
+      </div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-step" data-cycle="DECODE">
+        <span class="cycle-num">②</span> <span class="cycle-name">DECODE</span>
+      </div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-step" data-cycle="EXECUTE">
+        <span class="cycle-num">③</span> <span class="cycle-name">EXECUTE</span>
+      </div>
+      <div class="cycle-arrow">→</div>
+      <div class="cycle-step" data-cycle="STORE">
+        <span class="cycle-num">④</span> <span class="cycle-name">STORE</span>
+      </div>
+    </div>
+
     <button id="btn-theory" class="btn-theory" aria-label="Ver teoría">
       <span>📖</span> Ver teoría
     </button>
@@ -30,64 +50,64 @@
        ============================================================ -->
   <main id="app-main">
 
-    <!-- ---------- Example selector ---------- -->
-    <section id="example-selector" aria-label="Seleccionar ejemplo">
-      <span class="selector-label">Seleccionar ejemplo:</span>
-      <div class="selector-buttons">
-        <button class="example-btn active" data-example="0">
-          <span class="ex-icon">🔢</span>
-          <span class="ex-label">3 + 2 × 5</span>
-        </button>
-        <button class="example-btn" data-example="1">
-          <span class="ex-icon">📁</span>
-          <span class="ex-label">Mover datos</span>
-        </button>
-        <button class="example-btn" data-example="2">
-          <span class="ex-icon">⚖️</span>
-          <span class="ex-label">2 = 3 − 1</span>
-        </button>
-      </div>
-    </section>
-
-    <!-- ---------- Simplification note ---------- -->
-    <div id="simplification-note" class="note-banner" role="note">
-      <span class="note-icon">ℹ️</span>
-      <span id="note-text" class="note-text"></span>
-    </div>
-
-    <!-- ---------- Two-column layout: diagram + state panel ---------- -->
+    <!-- ---------- Two-column layout: sidebar + diagram ---------- -->
     <div id="content-area">
+
+      <!-- ===== SIDEBAR (Controls & Theory) ===== -->
+      <aside id="action-panel" class="action-panel" aria-label="Panel de acciones y teoría">
+        <!-- ---------- Example Selector ---------- -->
+        <section id="example-selector" aria-label="Selector de ejemplos">
+          <span class="selector-label">Seleccionar ejemplo:</span>
+          <div class="selector-buttons">
+            <button class="example-btn" data-example="0" title="Suma básica">
+              <span class="ex-icon">🧮</span> <span class="ex-label">3 + 2 = 5</span>
+            </button>
+            <button class="example-btn" data-example="1" title="Mover un dato de memoria a otra posición">
+              <span class="ex-icon">📁</span> <span class="ex-label">Mover datos</span>
+            </button>
+            <button class="example-btn" data-example="2" title="Operación con resta">
+              <span class="ex-icon">⚖️</span> <span class="ex-label">2 = 3 - 1</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Simplification note -->
+        <div id="simplification-note" class="note-banner" aria-live="polite">
+          <span class="note-icon">ℹ️</span>
+          <span id="note-text" class="note-text"></span>
+        </div>
+
+        <!-- ---------- Controls & Theory Combined ---------- -->
+        <section id="step-description" class="theory-panel">
+          <div id="step-indicator" class="step-indicator">
+            PASO <span id="step-current">0</span> / <span id="step-total">0</span>
+          </div>
+          
+          <div id="step-desc-main" class="theory-main">
+            Seleccioná un ejemplo y presioná <strong>"Siguiente"</strong> o <strong>"Ejecutar"</strong> para comenzar.
+          </div>
+          <div id="step-desc-detail" class="theory-detail"></div>
+
+          <div class="controls-row">
+            <button id="btn-reset" class="ctrl-btn" title="Reiniciar simulación" aria-label="Reiniciar">
+              <span class="ctrl-icon">🔄</span>
+            </button>
+            <button id="btn-prev" class="ctrl-btn" title="Paso anterior" aria-label="Paso anterior" disabled>
+              <span class="ctrl-icon">◀</span><span class="ctrl-text">Anterior</span>
+            </button>
+            <button id="btn-play" class="ctrl-btn ctrl-btn-play" title="Ejecutar automáticamente" aria-label="Ejecutar">
+              <span class="ctrl-icon" id="play-icon">▶</span><span class="ctrl-text" id="play-text">Ejecutar</span>
+            </button>
+            <button id="btn-next" class="ctrl-btn" title="Siguiente paso" aria-label="Siguiente paso">
+              <span class="ctrl-icon">⏭</span><span class="ctrl-text">Siguiente</span>
+            </button>
+          </div>
+        </section>
+      </aside>
 
       <!-- ===== MAIN DIAGRAM ===== -->
       <section id="diagram-section" aria-label="Diagrama de arquitectura">
         
-        <!-- Large Cycle Indicator -->
-        <div id="cycle-indicator" class="cycle-indicator large-banner">
-          <div class="cycle-step" data-cycle="FETCH">
-            <span class="cycle-num">1</span>
-            <span class="cycle-name">FETCH</span>
-            <span class="cycle-desc">Buscar</span>
-          </div>
-          <div class="cycle-arrow">→</div>
-          <div class="cycle-step" data-cycle="DECODE">
-            <span class="cycle-num">2</span>
-            <span class="cycle-name">DECODE</span>
-            <span class="cycle-desc">Decodificar</span>
-          </div>
-          <div class="cycle-arrow">→</div>
-          <div class="cycle-step" data-cycle="EXECUTE">
-            <span class="cycle-num">3</span>
-            <span class="cycle-name">EXECUTE</span>
-            <span class="cycle-desc">Ejecutar</span>
-          </div>
-          <div class="cycle-arrow">→</div>
-          <div class="cycle-step" data-cycle="STORE">
-            <span class="cycle-num">4</span>
-            <span class="cycle-name">STORE</span>
-            <span class="cycle-desc">Almacenar</span>
-          </div>
-        </div>
-
         <div id="diagram-wrapper">
           <div id="diagram-container">
 
@@ -107,14 +127,16 @@
               <line x1="240" y1="310" x2="660" y2="310" class="bus-line bus-line-ctrl" id="busline-ctrl"/>
 
               <!-- Vertical connectors (CPU to Buses) -->
-              <line x1="320" y1="280" x2="320" y2="290" class="connector connector-cpu"/>
-              <line x1="450" y1="280" x2="450" y2="300" class="connector connector-cpu"/>
-              <line x1="580" y1="280" x2="580" y2="310" class="connector connector-cpu"/>
+              <line x1="320" y1="280" x2="320" y2="290" class="connector bus-line bus-line-data"/>
+              <line x1="450" y1="280" x2="450" y2="300" class="connector bus-line bus-line-addr"/>
+              <line x1="580" y1="280" x2="580" y2="310" class="connector bus-line bus-line-ctrl"/>
               
               <!-- Vertical connectors (Memory to Buses) -->
-              <line x1="320" y1="320" x2="320" y2="290" class="connector connector-memory"/>
-              <line x1="450" y1="320" x2="450" y2="300" class="connector connector-memory"/>
-              <line x1="580" y1="320" x2="580" y2="310" class="connector connector-memory"/>
+              <line x1="320" y1="320" x2="320" y2="290" class="connector bus-line bus-line-data"/>
+              <line x1="450" y1="320" x2="450" y2="300" class="connector bus-line bus-line-addr"/>
+              <line x1="580" y1="320" x2="580" y2="310" class="connector bus-line bus-line-ctrl"/>
+              <!-- Visible Internal Bus Lines -->
+              <line x1="510" y1="143" x2="522" y2="143" class="bus-line bus-line-internal" id="busline-internal"/>
             </svg>
 
             <!-- SVG: animation paths (invisible, used for getPointAtLength) -->
@@ -134,8 +156,8 @@
               <path id="path-control-cpu-memory"     d="M 580,280 L 580,310 L 580,320" class="anim-path"/>
 
               <!-- Internal CPU paths -->
-              <path id="path-internal-registers-alu"  d="M 430,170 L 410,170" class="anim-path"/>
-              <path id="path-internal-alu-registers"  d="M 410,170 L 430,170" class="anim-path"/>
+              <path id="path-internal-registers-alu"  d="M 522,143 L 510,143" class="anim-path"/>
+              <path id="path-internal-alu-registers"  d="M 510,143 L 522,143" class="anim-path"/>
             </svg>
 
             <!-- SVG: animated packets layer (z-index: 20, in front) -->
@@ -157,7 +179,7 @@
             <!-- ===== COMPONENT BOXES ===== -->
 
             <!-- Input device -->
-            <div id="comp-input" class="component comp-io" data-tooltip="Dispositivo de Entrada — Por aquí ingresan los datos y programas al sistema.">
+            <div id="comp-input" class="component comp-io component-interactive" data-info="comp-input" data-tooltip="Dispositivo de Entrada — Haz clic para ver más info">
               <div class="comp-header">
                 <span class="comp-icon">📥</span>
                 <span class="comp-title">ENTRADA</span>
@@ -169,7 +191,7 @@
             </div>
 
             <!-- Output device -->
-            <div id="comp-output" class="component comp-io" data-tooltip="Dispositivo de Salida — Por aquí salen los resultados procesados.">
+            <div id="comp-output" class="component comp-io component-interactive" data-info="comp-output" data-tooltip="Dispositivo de Salida — Haz clic para ver más info">
               <div class="comp-header">
                 <span class="comp-icon">📤</span>
                 <span class="comp-title">SALIDA</span>
@@ -260,41 +282,21 @@
 
     </div><!-- /content-area -->
 
-    <!-- ---------- Controls bar ---------- -->
-    <section id="controls-bar" aria-label="Controles de simulación">
-      <div class="controls-row">
-        <button id="btn-reset" class="ctrl-btn" title="Reiniciar simulación" aria-label="Reiniciar">
-          <span class="ctrl-icon">🔄</span><span class="ctrl-text">Reiniciar</span>
-        </button>
-        <button id="btn-prev" class="ctrl-btn" title="Paso anterior" aria-label="Paso anterior" disabled>
-          <span class="ctrl-icon">◀</span><span class="ctrl-text">Anterior</span>
-        </button>
-        <button id="btn-play" class="ctrl-btn ctrl-btn-play" title="Ejecutar automáticamente" aria-label="Ejecutar">
-          <span class="ctrl-icon" id="play-icon">▶</span><span class="ctrl-text" id="play-text">Ejecutar</span>
-        </button>
-        <button id="btn-next" class="ctrl-btn" title="Siguiente paso" aria-label="Siguiente paso">
-          <span class="ctrl-icon">⏭</span><span class="ctrl-text">Siguiente</span>
-        </button>
-        <div id="step-indicator" class="step-indicator">
-          Paso <span id="step-current">0</span> de <span id="step-total">0</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ---------- Large Theory Panel ---------- -->
-    <section id="step-description" class="theory-panel" aria-label="Descripción detallada del paso">
-      <div id="step-desc-main" class="theory-main">
-        Seleccioná un ejemplo y presioná <strong>"Siguiente"</strong> o <strong>"Ejecutar"</strong> para comenzar la simulación.
-      </div>
-      <div id="step-desc-detail" class="theory-detail"></div>
-    </section>
-
   </main>
 
   <!-- ============================================================
        THEORY MODAL & COMPONENT MODAL
        ============================================================ -->
-  <div id="component-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="comp-title">
+  <div id="theory-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="theory-title">
+    <div class="modal-content">
+      <button id="btn-close-theory" class="modal-close" aria-label="Cerrar">&times;</button>
+      <div id="theory-body" class="theory-body">
+        <!-- Content injected by theory.js -->
+      </div>
+    </div>
+  </div>
+
+  <div id="component-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modal-comp-title">
     <div class="modal-content">
       <button id="btn-close-modal" class="modal-close" aria-label="Cerrar">&times;</button>
       <div class="modal-body">
@@ -312,14 +314,14 @@
   <!-- ============================================================
        SCRIPTS (order matters — no ES modules, uses global VN namespace)
        ============================================================ -->
-  <script src="js/examples.js"></script>
-  <script src="js/simulation.js"></script>
-  <script src="js/diagram.js"></script>
-  <script src="js/texts.js"></script>
-  <script src="js/animations.js"></script>
-  <script src="js/ui.js"></script>
-  <script src="js/theory.js"></script>
-  <script src="js/app.js"></script>
+  <script src="js/examples.js?v=3"></script>
+  <script src="js/simulation.js?v=3"></script>
+  <script src="js/diagram.js?v=3"></script>
+  <script src="js/texts.js?v=3"></script>
+  <script src="js/animations_v2.js"></script>
+  <script src="js/ui.js?v=3"></script>
+  <script src="js/theory.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
 
 </body>
 </html>

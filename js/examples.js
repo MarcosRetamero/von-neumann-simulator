@@ -133,7 +133,7 @@ VN.Examples = (function () {
         animations: [
           { bus: null, from: 'registers', to: 'alu', value: 'R1,R2', label: 'Operandos → ALU' }
         ],
-        description: 'EXECUTE — La ALU realiza la multiplicación: 2 × 5 = 10.',
+        description: 'La ALU terminó de multiplicar los operandos: **2 × 5 = 10**.',
         detail: 'Los valores de R1 (2) y R2 (5) se envían a la ALU a través de conexiones internas del procesador. La ALU ejecuta la operación de multiplicación y obtiene el resultado: 10.'
       }),
 
@@ -148,7 +148,7 @@ VN.Examples = (function () {
         animations: [
           { bus: null, from: 'alu', to: 'registers', value: '10', label: 'Resultado → R3' }
         ],
-        description: 'STORE — El resultado (10) se guarda en el Registro R3.',
+        description: 'El resultado **10** se guarda temporalmente en el Registro R3.',
         detail: 'El resultado de la multiplicación (10) se transfiere desde la ALU al registro R3. Este valor se usará como operando en la próxima instrucción (la suma).'
       }),
 
@@ -208,7 +208,7 @@ VN.Examples = (function () {
         animations: [
           { bus: null, from: 'registers', to: 'alu', value: 'R1,R3', label: 'Operandos → ALU' }
         ],
-        description: 'EXECUTE — La ALU realiza la suma: 3 + 10 = 13.',
+        description: 'La ALU terminó de realizar la suma final: **3 + 10 = 13**.',
         detail: 'Los valores de R1 (3) y R3 (10) se envían a la ALU. Se realiza la operación de suma: 3 + 10 = 13. Este es el resultado final de la expresión 3 + 2 × 5.'
       }),
 
@@ -242,7 +242,7 @@ VN.Examples = (function () {
         animations: [
           { bus: 'data', from: 'memory', to: 'output', value: '13', label: 'Resultado: 13' }
         ],
-        description: 'El resultado (13) se envía al dispositivo de Salida.',
+        description: '¡Listo! El resultado **13** se envió al dispositivo de Salida.',
         detail: 'El valor almacenado en la dirección 105 se transfiere al dispositivo de salida a través del Bus de Datos. El usuario ve el resultado final: 3 + 2 × 5 = 13. ¡Operación completada!'
       })
     ]
