@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=3">
+  <link rel="stylesheet" href="css/styles.css?v=4">
 </head>
 <body>
 
@@ -17,7 +17,7 @@
        ============================================================ -->
   <header id="app-header">
     <div class="header-left">
-      <span class="header-icon">🖥️</span>
+      <span class="header-icon"></span>
       <h1>Simulador <span class="highlight">Von Neumann</span></h1>
     </div>
 
@@ -41,7 +41,7 @@
     </div>
 
     <button id="btn-theory" class="btn-theory" aria-label="Ver teoría">
-      <span>📖</span> Ver teoría
+      <span></span> Ver teoría
     </button>
   </header>
 
@@ -60,20 +60,20 @@
           <span class="selector-label">Seleccionar ejemplo:</span>
           <div class="selector-buttons">
             <button class="example-btn" data-example="0" title="Suma básica">
-              <span class="ex-icon">🧮</span> <span class="ex-label">3 + 2 = 5</span>
+              <span class="ex-icon"></span> <span class="ex-label">3 + 2 = 5</span>
             </button>
             <button class="example-btn" data-example="1" title="Mover un dato de memoria a otra posición">
-              <span class="ex-icon">📁</span> <span class="ex-label">Mover datos</span>
+              <span class="ex-icon"></span> <span class="ex-label">Mover datos</span>
             </button>
             <button class="example-btn" data-example="2" title="Operación con resta">
-              <span class="ex-icon">⚖️</span> <span class="ex-label">2 = 3 - 1</span>
+              <span class="ex-icon"></span> <span class="ex-label">2 = 3 - 1</span>
             </button>
           </div>
         </section>
 
         <!-- Simplification note -->
         <div id="simplification-note" class="note-banner" aria-live="polite">
-          <span class="note-icon">ℹ️</span>
+          <span class="note-icon"></span>
           <span id="note-text" class="note-text"></span>
         </div>
 
@@ -90,7 +90,7 @@
 
           <div class="controls-row">
             <button id="btn-reset" class="ctrl-btn" title="Reiniciar simulación" aria-label="Reiniciar">
-              <span class="ctrl-icon">🔄</span>
+              <span class="ctrl-icon"></span><span class="ctrl-text">Reiniciar</span>
             </button>
             <button id="btn-prev" class="ctrl-btn" title="Paso anterior" aria-label="Paso anterior" disabled>
               <span class="ctrl-icon">◀</span><span class="ctrl-text">Anterior</span>
@@ -181,7 +181,7 @@
             <!-- Input device -->
             <div id="comp-input" class="component comp-io component-interactive" data-info="comp-input" data-tooltip="Dispositivo de Entrada — Haz clic para ver más info">
               <div class="comp-header">
-                <span class="comp-icon">📥</span>
+                <span class="comp-icon"></span>
                 <span class="comp-title">ENTRADA</span>
               </div>
               <div class="comp-body">
@@ -193,7 +193,7 @@
             <!-- Output device -->
             <div id="comp-output" class="component comp-io component-interactive" data-info="comp-output" data-tooltip="Dispositivo de Salida — Haz clic para ver más info">
               <div class="comp-header">
-                <span class="comp-icon">📤</span>
+                <span class="comp-icon"></span>
                 <span class="comp-title">SALIDA</span>
               </div>
               <div class="comp-body">
@@ -210,7 +210,7 @@
             <!-- Memory -->
             <div id="comp-memory" class="component comp-memory component-interactive" data-info="comp-memory" data-tooltip="Haz clic para ver más info">
               <div class="comp-header">
-                <span class="comp-icon">💾</span>
+                <span class="comp-icon"></span>
                 <span class="comp-title">MEMORIA PRINCIPAL</span>
               </div>
               <div class="comp-body">
@@ -224,14 +224,14 @@
             <!-- CPU container -->
             <div id="comp-cpu" class="component comp-cpu component-interactive" data-info="comp-cpu" data-tooltip="Haz clic para ver más info">
               <div class="comp-header cpu-header">
-                <span class="comp-icon">⚙️</span>
+                <span class="comp-icon"></span>
                 <span class="comp-title">PROCESADOR (CPU)</span>
               </div>
 
               <!-- UC -->
               <div id="comp-uc" class="sub-component sub-uc component-interactive" data-info="comp-uc" data-tooltip="Haz clic para ver más info">
                 <div class="sub-header">
-                  <span class="sub-icon">🎯</span>
+                  <span class="sub-icon"></span>
                   <span class="sub-title">UC</span>
                 </div>
                 <div class="sub-body">
@@ -243,7 +243,7 @@
               <!-- ALU -->
               <div id="comp-alu" class="sub-component sub-alu component-interactive" data-info="comp-alu" data-tooltip="Haz clic para ver más info">
                 <div class="sub-header">
-                  <span class="sub-icon">➕</span>
+                  <span class="sub-icon"></span>
                   <span class="sub-title">ALU</span>
                 </div>
                 <div class="sub-body" id="alu-display">
@@ -254,7 +254,7 @@
               <!-- Registers -->
               <div id="comp-registers" class="sub-component sub-registers component-interactive" data-info="comp-registers" data-tooltip="Haz clic para ver más info">
                 <div class="sub-header">
-                  <span class="sub-icon">📋</span>
+                  <span class="sub-icon"></span>
                   <span class="sub-title">REGISTROS</span>
                 </div>
                 <div class="sub-body" id="registers-display">
@@ -314,14 +314,22 @@
   <!-- ============================================================
        SCRIPTS (order matters — no ES modules, uses global VN namespace)
        ============================================================ -->
-  <script src="js/examples.js?v=3"></script>
-  <script src="js/simulation.js?v=3"></script>
-  <script src="js/diagram.js?v=3"></script>
-  <script src="js/texts.js?v=3"></script>
-  <script src="js/animations_v2.js"></script>
-  <script src="js/ui.js?v=3"></script>
-  <script src="js/theory.js?v=3"></script>
-  <script src="js/app.js?v=3"></script>
+  <script src="js/examples.js?v=4"></script>
+  <script src="js/simulation.js?v=4"></script>
+  <script src="js/diagram.js?v=4"></script>
+  <script src="js/texts.js?v=4"></script>
+  <script src="js/animations_v2.js?v=4"></script>
+  <script src="js/ui.js?v=4"></script>
+  <script src="js/theory.js?v=4"></script>
+  <script src="js/app.js?v=4"></script>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer class="app-footer">
+    <p>Desarrollado como recurso didáctico para la enseñanza de Arquitectura de Computadoras.</p>
+    <p> Con ❤ por <a href="https://www.linkedin.com/in/marcos-retamero-working/" target="_blank" rel="noopener noreferrer">Marcos Retamero</a></p>
+  </footer>
 
 </body>
 </html>

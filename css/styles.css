@@ -108,6 +108,7 @@ table { border-collapse: collapse; }
   border-bottom: 1px solid var(--border-color);
   flex-wrap: wrap;
   gap: var(--sp-sm);
+  margin-bottom: var(--sp-md);
 }
 .header-left {
   display: flex;
@@ -1222,6 +1223,7 @@ table { border-collapse: collapse; }
 
 /* Animate data packet */
 .data-packet {
+  display: none !important;
   animation: packet-pulse 0.8s ease-in-out infinite;
 }
 
