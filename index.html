@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/styles.css?v=4">
+  <link rel="stylesheet" href="css/styles.css?v=7">
 </head>
 <body>
 
@@ -60,10 +60,10 @@
           <span class="selector-label">Seleccionar ejemplo:</span>
           <div class="selector-buttons">
             <button class="example-btn" data-example="0" title="Suma básica">
-              <span class="ex-icon"></span> <span class="ex-label">3 + 2 = 5</span>
+              <span class="ex-icon"></span> <span class="ex-label">3 + 2 × 5</span>
             </button>
             <button class="example-btn" data-example="1" title="Mover un dato de memoria a otra posición">
-              <span class="ex-icon"></span> <span class="ex-label">Mover datos</span>
+              <span class="ex-icon"></span> <span class="ex-label">Mover (200 → 300)</span>
             </button>
             <button class="example-btn" data-example="2" title="Operación con resta">
               <span class="ex-icon"></span> <span class="ex-label">2 = 3 - 1</span>
@@ -116,6 +116,8 @@
               <!-- Bus labels -->
               <text x="55" y="282" class="bus-label bus-label-data">Bus de Datos</text>
               <text x="735" y="282" class="bus-label bus-label-data">Bus de Datos (Salida)</text>
+              <text x="735" y="295" class="bus-label bus-label-addr">Bus de Direcciones</text>
+              <text x="735" y="308" class="bus-label bus-label-ctrl">Bus de Control</text>
               
               <!-- Horizontal bus lines (Input to System, System to Output) -->
               <line x1="175" y1="290" x2="240" y2="290" class="bus-line bus-line-data" id="busline-data-in"/>
@@ -136,7 +138,8 @@
               <line x1="450" y1="320" x2="450" y2="300" class="connector bus-line bus-line-addr"/>
               <line x1="580" y1="320" x2="580" y2="310" class="connector bus-line bus-line-ctrl"/>
               <!-- Visible Internal Bus Lines -->
-              <line x1="510" y1="143" x2="522" y2="143" class="bus-line bus-line-internal" id="busline-internal"/>
+              <line x1="378" y1="143" x2="390" y2="143" class="bus-line bus-line-internal" id="busline-internal-1"/>
+              <line x1="510" y1="143" x2="522" y2="143" class="bus-line bus-line-internal" id="busline-internal-2"/>
             </svg>
 
             <!-- SVG: animation paths (invisible, used for getPointAtLength) -->
@@ -156,6 +159,8 @@
               <path id="path-control-cpu-memory"     d="M 580,280 L 580,310 L 580,320" class="anim-path"/>
 
               <!-- Internal CPU paths -->
+              <path id="path-internal-uc-registers"   d="M 378,143 L 390,143" class="anim-path"/>
+              <path id="path-internal-registers-uc"   d="M 390,143 L 378,143" class="anim-path"/>
               <path id="path-internal-registers-alu"  d="M 522,143 L 510,143" class="anim-path"/>
               <path id="path-internal-alu-registers"  d="M 510,143 L 522,143" class="anim-path"/>
             </svg>
@@ -258,9 +263,10 @@
                   <span class="sub-title">REGISTROS</span>
                 </div>
                 <div class="sub-body" id="registers-display">
-                  <div class="reg-row"><span class="reg-label">R1</span><span id="reg-r1" class="reg-val">—</span></div>
-                  <div class="reg-row"><span class="reg-label">R2</span><span id="reg-r2" class="reg-val">—</span></div>
-                  <div class="reg-row"><span class="reg-label">R3</span><span id="reg-r3" class="reg-val">—</span></div>
+                  <div class="reg-row"><span class="reg-label">MAR</span><span id="reg-mar" class="reg-val">—</span></div>
+                  <div class="reg-row"><span class="reg-label">MBR</span><span id="reg-mbr" class="reg-val">—</span></div>
+                  <div class="reg-row"><span class="reg-label">AX</span><span id="reg-ax" class="reg-val">—</span></div>
+                  <div class="reg-row"><span class="reg-label">BX</span><span id="reg-bx" class="reg-val">—</span></div>
                 </div>
               </div>
 
@@ -314,14 +320,14 @@
   <!-- ============================================================
        SCRIPTS (order matters — no ES modules, uses global VN namespace)
        ============================================================ -->
-  <script src="js/examples.js?v=4"></script>
-  <script src="js/simulation.js?v=4"></script>
-  <script src="js/diagram.js?v=4"></script>
-  <script src="js/texts.js?v=4"></script>
-  <script src="js/animations_v2.js?v=4"></script>
-  <script src="js/ui.js?v=4"></script>
-  <script src="js/theory.js?v=4"></script>
-  <script src="js/app.js?v=4"></script>
+  <script src="js/examples.js?v=9"></script>
+  <script src="js/simulation.js?v=9"></script>
+  <script src="js/diagram.js?v=9"></script>
+  <script src="js/texts.js?v=9"></script>
+  <script src="js/animations_v2.js?v=9"></script>
+  <script src="js/ui.js?v=9"></script>
+  <script src="js/theory.js?v=9"></script>
+  <script src="js/app.js?v=9"></script>
 
   <!-- ============================================================
        FOOTER

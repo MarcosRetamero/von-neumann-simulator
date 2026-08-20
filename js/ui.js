@@ -28,9 +28,10 @@ VN.UI = (function () {
     dom.ucPc        = document.getElementById('uc-pc');
     dom.ucIr        = document.getElementById('uc-ir');
     dom.aluDisplay  = document.getElementById('alu-display');
-    dom.regR1       = document.getElementById('reg-r1');
-    dom.regR2       = document.getElementById('reg-r2');
-    dom.regR3       = document.getElementById('reg-r3');
+    dom.regMAR      = document.getElementById('reg-mar');
+    dom.regMBR      = document.getElementById('reg-mbr');
+    dom.regAX       = document.getElementById('reg-ax');
+    dom.regBX       = document.getElementById('reg-bx');
     dom.memTbody    = document.getElementById('memory-tbody');
 
     /* Modal refs */
@@ -126,7 +127,7 @@ VN.UI = (function () {
     dom.descMain.classList.add('animate');
 
     if (snap.detail) {
-      dom.descDetail.textContent = snap.detail;
+      dom.descDetail.innerHTML = snap.detail.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
       dom.descDetail.classList.add('visible');
     } else {
       dom.descDetail.classList.remove('visible');
@@ -205,9 +206,10 @@ VN.UI = (function () {
   /* ---- Registers ---- */
   function updateRegisters(snap) {
     var r = snap.registers;
-    updateRegDisplay(dom.regR1, r.R1);
-    updateRegDisplay(dom.regR2, r.R2);
-    updateRegDisplay(dom.regR3, r.R3);
+    updateRegDisplay(dom.regMAR, r.MAR);
+    updateRegDisplay(dom.regMBR, r.MBR);
+    updateRegDisplay(dom.regAX,  r.AX);
+    updateRegDisplay(dom.regBX,  r.BX);
   }
 
   function updateRegDisplay(el, value) {
@@ -275,9 +277,10 @@ VN.UI = (function () {
     dom.ucPc.textContent = '—';
     dom.ucIr.textContent = '—';
     dom.aluDisplay.innerHTML = '<span class="alu-idle">Inactiva</span>';
-    dom.regR1.textContent = '—';
-    dom.regR2.textContent = '—';
-    dom.regR3.textContent = '—';
+    dom.regMAR.textContent = '—';
+    dom.regMBR.textContent = '—';
+    dom.regAX.textContent = '—';
+    dom.regBX.textContent = '—';
     dom.memTbody.innerHTML = '';
     dom.memTbody.innerHTML = '';
   }

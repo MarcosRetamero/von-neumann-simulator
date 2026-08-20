@@ -574,8 +574,8 @@ table { border-collapse: collapse; }
 
 /* UC */
 .sub-uc {
-  left: 18px; top: 38px;
-  width: 120px; height: 90px;
+  left: 18px; top: 32px;
+  width: 120px; height: 110px;
   border-color: rgba(139, 92, 246, 0.3);
   background: var(--color-uc-bg);
 }
@@ -588,8 +588,8 @@ table { border-collapse: collapse; }
 
 /* ALU */
 .sub-alu {
-  left: 150px; top: 38px;
-  width: 120px; height: 90px;
+  left: 150px; top: 32px;
+  width: 120px; height: 110px;
   border-color: rgba(249, 115, 22, 0.3);
   background: var(--color-alu-bg);
 }
@@ -608,8 +608,8 @@ table { border-collapse: collapse; }
 
 /* Registers */
 .sub-registers {
-  left: 282px; top: 38px;
-  width: 120px; height: 90px;
+  left: 282px; top: 32px;
+  width: 120px; height: 110px;
   border-color: rgba(16, 185, 129, 0.3);
   background: var(--color-regs-bg);
 }
@@ -702,6 +702,7 @@ table { border-collapse: collapse; }
   flex-direction: column;
   gap: var(--sp-md);
   flex: 1;
+  min-height: 420px;
 }
 .theory-main {
   font-size: 1.05rem;
@@ -898,6 +899,7 @@ table { border-collapse: collapse; }
   flex-wrap: wrap;
   gap: var(--sp-sm);
   justify-content: center;
+  margin-top: auto;
 }
 .ctrl-btn {
   display: flex; align-items: center; justify-content: center; gap: 8px;
