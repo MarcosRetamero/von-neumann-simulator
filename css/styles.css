@@ -1217,7 +1217,6 @@ table { border-collapse: collapse; }
   transition: transform 0.1s linear; /* Smooth micro-movements if needed */
 }
 
-}
 @keyframes slideIn {
   from { opacity: 0; transform: translateX(-10px); }
   to   { opacity: 1; transform: translateX(0); }
